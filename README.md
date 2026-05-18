@@ -4,6 +4,8 @@ A Mucha-aesthetic companion PWA shell. Client-side only — data lives in
 IndexedDB, your LLM key lives in your browser, no backend required.
 AGPL v3.
 
+> **没耐心读完?** → [**QUICKSTART**](QUICKSTART.md) · 5 分钟 · 0 setup · 一键部署
+
 ## Dev
 
 ```bash
