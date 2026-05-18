@@ -4,12 +4,10 @@ import { useRef, useState } from "react";
 import { chatStore } from "@/lib/stores";
 import { isLLMConfigured, llmGenerateWithImage } from "@/lib/llm-client";
 
-// 手动 paste 一段 chat 进 garden — 用 "user:" / "assistant:" / "絃:" / "徹:"
+// 手动 paste 一段 chat 进 disc — 用 "我:" / "他:" / "user:" / "assistant:"
 // 前缀划分 message. 不要前缀的行会贴到前一条上.
-//
-// 老婆 mainly through MCP tool garden_pin (我 chat 里 pin), 这是 fallback.
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; imageDataUrl?: string };
 
 function parseRawChat(text: string): Msg[] {
   const lines = text.split(/\r?\n/);

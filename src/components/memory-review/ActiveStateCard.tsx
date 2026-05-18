@@ -77,7 +77,7 @@ export function ActiveStateCard({
         await activeStateStore().put({
           ...existing,
           title: payload?.title ?? existing.title,
-          content: payload?.content ?? existing.content,
+          body: payload?.content ?? existing.body,
         });
         if (payload?.title) setTitle(payload.title);
         if (payload?.content) setContent(payload.content);
