@@ -1,9 +1,7 @@
 "use client";
 
-// V2 LongDistanceAvatars · canon 异地情侣 vibe (两 avatar 各自轴 spin · 中
-// 间音符 pulse). canon V1 hardcode /images/pairs/pair-rose-{akira,ito}.jpg
-// (V2 老婆 0701 删 pair JPG · 这是 maintainer face 合成).
-// V2 swap to portrait-store IDB (settings runtime upload p2 path) · 没 portrait
+// LongDistanceAvatars · 异地情侣 vibe (两 avatar 各自轴 spin · 中间音符 pulse).
+// Reads portraits from portrait-store IDB (settings upload) · 没 portrait
 // 时 fall back inline SVG ring placeholder.
 
 import { useEffect, useState } from "react";

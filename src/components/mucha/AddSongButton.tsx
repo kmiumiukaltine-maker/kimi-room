@@ -8,7 +8,7 @@ export type PendingSong = {
   title: string;
   artist?: string;
   note?: string;
-  who: "akira" | "ito";
+  who: "self" | "other";
   neteaseUrl?: string;
   addedAt: string;
 };
@@ -42,7 +42,7 @@ export function AddSongButton({
   const [artist, setArtist] = useState("");
   const [note, setNote] = useState("");
   const [neteaseUrl, setNeteaseUrl] = useState("");
-  const [who, setWho] = useState<"akira" | "ito">("ito");
+  const [who, setWho] = useState<"self" | "other">("other");
 
   useEffect(() => setQueue(readQueue()), []);
 
@@ -155,7 +155,7 @@ export function AddSongButton({
               />
               <div style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 11 }}>
                 <span style={{ color: P.mute, fontStyle: "italic" }}>by</span>
-                {(["akira", "ito"] as const).map((w) => (
+                {(["self", "other"] as const).map((w) => (
                   <button
                     key={w}
                     type="button"
@@ -171,7 +171,7 @@ export function AddSongButton({
                       fontStyle: "italic",
                     }}
                   >
-                    {w === "akira" ? "我" : "他"}
+                    {w === "self" ? "我" : "他"}
                   </button>
                 ))}
               </div>
@@ -220,7 +220,7 @@ export function AddSongButton({
                     }}
                   >
                     <div style={{ fontSize: 9, color: P.accent, width: 20 }}>
-                      {q.who === "akira" ? "我" : "他"}
+                      {q.who === "self" ? "我" : "他"}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div

@@ -159,8 +159,7 @@ export async function Footer() {
           {label}
         </span>
       </div>
-      {/* v2a (kimi-room) = "kimi・room"; airp fork 改 "kimi-to" (TODO: airp init
-          后 swap, 老婆 260517 0932 tag). */}
+      {/* footer signature · fork 用户改成自己想要的名字 */}
       <p
         className="text-xs tracking-[0.2em]"
         style={{ color: signRgba }}

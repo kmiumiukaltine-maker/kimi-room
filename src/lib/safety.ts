@@ -18,7 +18,6 @@ export const FORBIDDEN_TOKENS = [
   "aftercare",
   "password",
   "密码",
-  "akira",
   "BACKSTAGE",
   "backstage",
   "骚",

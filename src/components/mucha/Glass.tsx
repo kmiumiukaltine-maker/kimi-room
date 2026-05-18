@@ -1,7 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 
 // Liquid-glass panel — frosted light blur with subtle shine.
-// Ported from Kimi-to-Mucha.html Glass component.
 export function Glass({
   children,
   style,

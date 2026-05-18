@@ -1,5 +1,5 @@
-// V2 stub · canon maintainer content (Akira's reaction notes) stripped.
-// Type 留 backwards compat 给 现 page import. V2 page rewrite 走 MemoStore IDB.
+// V2 stub · maintainer seed content stripped. Type kept for page import compat.
+// V2 pages read from MemoStore (IDB) instead.
 
 export type Memo = {
   slug: string;

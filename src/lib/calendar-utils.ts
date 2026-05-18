@@ -130,10 +130,10 @@ export function storeIsEmpty(store: CalendarStore): boolean {
 // V2 ship 0 server backend · localStorage = single source of truth · these
 // stubs return null/empty so canon RoomCalendar localStorage-first path 走通.
 
-// Partner-written google calendar events mirrored into pwa_kv namespace="calendar-akira".
-// Calendar UI uses these to render a fox icon on dates partner wrote events.
-// V2: empty (no canon partner sync); fork 用户 想要 走 own webhook → own adapter.
-export type AkiraEvent = {
+// Partner-written google calendar events mirrored into local kv.
+// Calendar UI renders a fox icon on dates where partner wrote events.
+// V2 stub: empty (no partner sync wired); fork → wire own webhook adapter.
+export type MirrorEvent = {
   time: string;
   title: string;
   location?: string | null;
@@ -142,15 +142,15 @@ export type AkiraEvent = {
   googleEventId?: string | null;
 };
 
-export type AkiraDayMap = Record<string, AkiraEvent[]>;
+export type MirrorDayMap = Record<string, MirrorEvent[]>;
 
 export async function fetchAllEntries(): Promise<CalendarStore | null> {
   return null;
 }
 
-export async function fetchAllEntriesAndAkira(): Promise<{
+export async function fetchAllEntriesAndMirror(): Promise<{
   own: CalendarStore;
-  akira: AkiraDayMap;
+  mirror: MirrorDayMap;
 } | null> {
   return null;
 }

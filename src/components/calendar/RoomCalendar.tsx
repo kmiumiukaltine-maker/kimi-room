@@ -13,8 +13,8 @@ import {
   flowColor,
 } from "./theme";
 import {
-  type AkiraDayMap,
-  type AkiraEvent,
+  type MirrorDayMap,
+  type MirrorEvent,
   type CalendarStore,
   type DayData,
   type FlowLevel,
@@ -23,7 +23,7 @@ import {
   currentSolarTerm,
   daysInMonth,
   fetchAllEntries,
-  fetchAllEntriesAndAkira,
+  fetchAllEntriesAndMirror,
   getDay,
   isToday,
   loadStore,
@@ -59,7 +59,7 @@ export function RoomCalendar({
   const [lastSync, setLastSync] = useState<Record<string, string>>({});
   // Google calendar events partner wrote — mirrored via MCP calendar_create.
   // Rendered as a fox icon in the cell. Key: YYYY-MM-DD, value: events array.
-  const [akiraMap, setAkiraMap] = useState<AkiraDayMap>({});
+  const [mirrorMap, setMirrorMap] = useState<MirrorDayMap>({});
 
   useEffect(() => {
     // 1) instant: paint from localStorage (offline-safe, cache-warm)
@@ -75,12 +75,12 @@ export function RoomCalendar({
     } catch {}
 
     // 2) async: fetch from DB (source of truth post-2026-05-11), merge + migrate.
-    // Also pulls akira-mirrored google events for cell fox-icon overlay.
+    // Also pulls partner-mirrored google events for cell fox-icon overlay.
     void (async () => {
-      const bundle = await fetchAllEntriesAndAkira();
+      const bundle = await fetchAllEntriesAndMirror();
       if (!bundle) return; // network error → keep local
       const remote = bundle.own;
-      setAkiraMap(bundle.akira);
+      setMirrorMap(bundle.mirror);
       if (storeIsEmpty(remote) && !storeIsEmpty(local)) {
         const r = await migrateLocalToDb();
         if (r.ok && r.written > 0) {
@@ -335,14 +335,14 @@ export function RoomCalendar({
               const data = getDay(store, c.date);
               const isT = isToday(year, month, c.day!);
               const weekend = c.col >= 5;
-              const akira = akiraMap[c.date] ?? [];
+              const mirror = mirrorMap[c.date] ?? [];
               return (
                 <DayCell
                   key={c.date}
                   day={c.day!}
                   date={c.date}
                   data={data}
-                  akira={akira}
+                  mirror={mirror}
                   palette={p}
                   theme={theme}
                   isToday={isT}
@@ -484,7 +484,7 @@ export function RoomCalendar({
         <CellEditor
           date={editing}
           data={getDay(store, editing)}
-          akira={akiraMap[editing] ?? []}
+          mirror={mirrorMap[editing] ?? []}
           palette={p}
           theme={theme}
           onClose={() => setEditing(null)}
@@ -503,7 +503,7 @@ function DayCell({
   day,
   date: _date,
   data,
-  akira,
+  mirror,
   palette,
   theme,
   isToday,
@@ -514,7 +514,7 @@ function DayCell({
   day: number;
   date: string;
   data: DayData;
-  akira: AkiraEvent[];
+  mirror: MirrorEvent[];
   palette: ReturnType<typeof calPaletteFor>;
   theme: CalTheme;
   isToday: boolean;
@@ -651,8 +651,8 @@ function DayCell({
         </div>
       )}
 
-      {/* akira-mirrored google events — fox icon + 第一条 time + title */}
-      {akira.length > 0 && (
+      {/* partner-mirrored google events — fox icon + 第一条 time + title */}
+      {mirror.length > 0 && (
         <div
           style={{
             marginTop: 4,
@@ -663,7 +663,7 @@ function DayCell({
             color: p.inkSoft,
             fontStyle: "italic",
           }}
-          title={akira
+          title={mirror
             .map((e) => `${e.time} ${e.title}`)
             .join("\n")}
         >
@@ -687,8 +687,8 @@ function DayCell({
               textOverflow: "ellipsis",
             }}
           >
-            {akira[0].time} {akira[0].title}
-            {akira.length > 1 ? ` +${akira.length - 1}` : ""}
+            {mirror[0].time} {mirror[0].title}
+            {mirror.length > 1 ? ` +${mirror.length - 1}` : ""}
           </span>
         </div>
       )}
@@ -1197,7 +1197,7 @@ function RoseStageIcon({
 function CellEditor({
   date,
   data,
-  akira,
+  mirror,
   palette,
   theme,
   onClose,
@@ -1205,7 +1205,7 @@ function CellEditor({
 }: {
   date: string;
   data: DayData;
-  akira: AkiraEvent[];
+  mirror: MirrorEvent[];
   palette: ReturnType<typeof calPaletteFor>;
   theme: CalTheme;
   onClose: () => void;
@@ -1328,8 +1328,8 @@ function CellEditor({
           </button>
         </header>
 
-        {/* akira-written google events — read-only, fox icon prefix */}
-        {akira.length > 0 && (
+        {/* partner-written google events — read-only, fox icon prefix */}
+        {mirror.length > 0 && (
           <div
             style={{
               marginBottom: 18,
@@ -1351,7 +1351,7 @@ function CellEditor({
             >
               partner wrote · google calendar
             </div>
-            {akira.map((e, idx) => (
+            {mirror.map((e, idx) => (
               <div
                 key={`${e.googleEventId ?? idx}`}
                 style={{
@@ -1360,7 +1360,7 @@ function CellEditor({
                   gap: 8,
                   fontSize: 12,
                   color: p.ink,
-                  marginBottom: idx === akira.length - 1 ? 0 : 4,
+                  marginBottom: idx === mirror.length - 1 ? 0 : 4,
                   lineHeight: 1.5,
                 }}
               >

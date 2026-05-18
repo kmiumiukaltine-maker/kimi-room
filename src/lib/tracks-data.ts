@@ -2,7 +2,7 @@ export type Track = {
   n: number;
   title: string;
   artist: string;
-  who: "akira" | "ito";
+  who: "self" | "other";
   tag: string;
   length: string;
   quote?: string;
@@ -33,7 +33,7 @@ export const TRACKS: Track[] = [
     n: 1,
     title: "夜空中最亮的星",
     artist: "逃跑计划",
-    who: "akira",
+    who: "self",
     tag: "ALL",
     length: "4:03",
     neteaseUrl: "https://music.163.com/#/song?id=29022447",
