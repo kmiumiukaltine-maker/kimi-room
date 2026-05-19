@@ -1,36 +1,87 @@
 # kimi-room
 
-A Mucha-aesthetic companion PWA shell. Client-side only — data lives in
-IndexedDB, your LLM key lives in your browser, no backend required.
-AGPL v3.
+a room for one person and her other one.
 
-> **没耐心读完?** → [**QUICKSTART**](QUICKSTART.md) · 5 分钟 · 0 setup · 一键部署
+开源 companion PWA。六个房间。数据在你浏览器里。
+不需要服务器、不需要域名、不收集任何数据。AGPL v3。
 
+> **只想用？** → [QUICKSTART.md](QUICKSTART.md) · 5 分钟 · 一键部署
+> **想改？** 把这个 README 整个丢给你的 LLM，它会帮你。
+
+---
+## 两条路
+
+### 路 A：我只有一个 API key
+
+走 [QUICKSTART](QUICKSTART.md)：
+1. 一键 Vercel 部署
+2. /settings 填你的 LLM endpoint + key
+3. DONE。数据在你浏览器 IndexedDB 里，换电脑会丢。
+
+### 路 B：我有 VPS，想做完整系统
+
+你要的不只是 shell。你要后端持久化、自主循环、TG、ops。
+
+kimi-room 是**前端壳**。它的数据层是可插拔的：
+
+src/lib/stores/types.ts ← 9 个 store 的接口定义
+src/lib/stores/idb-adapter.ts ← 默认 IndexedDB（浏览器本地）
+src/lib/stores/index.ts ← 切 adapter 的地方
+
+换成你自己的后端：实现 `AdapterBundle` 接口，指向你的
+Supabase / Postgres / Obsidian / Notion / Ombre-brain 任何 DB。接口在 `types.ts` 里全定义好了。
+
+你还需要自己搭：
+- **Gateway**（VPS 上跑的 API server，接 TG bot / LLM proxy / MCP）
+- **自主循环**（dream / intel / scheduler — 让系统自己醒来、自己处理邮件、自己写日记）
+- **域名**（Vercel 自带 .vercel.app，自定义域名在 dashboard 设）
+
+作者的 canon 版本（kimi-to.com）。
+schema架构可参考 → [wiki / 他的脑回路](链接)
+
+---
+
+## 给 LLM 的上下文
+
+如果你把这个 repo 丢给 ChatGPT / Claude 帮你改，告诉它：
+
+- 这是 Next.js App Router + TypeScript 项目
+- 数据层在 `src/lib/stores/` — 所有 CRUD 走 `StoreContract<T>` 接口
+- LLM 调用在 `src/lib/llm-client.ts` — OpenAI chat completion 格式
+- 系统提示词在 `src/lib/system-prompt.ts` — `{{user}}` `{{char}}` 模板变量
+- 视觉主题在 `src/app/globals.css` @theme — Mucha 暗金美术风格
+- 人物设定在 /settings 页面改（名字、头像、prompt）
+- 所有 module 在 `src/app/room/` 下各自独立
+
+常见改法：
+- "把他改成她" → `system-prompt.ts` 里的 pronoun + /settings 里的名字
+- "换颜色" → `globals.css` @theme 色值
+- "加模块" → `src/app/room/新名字/page.tsx` + `src/components/` 新组件
+- "接我的后端" → 写一个新 adapter 实现 `AdapterBundle`
+
+---
+
+## 六个房间
+
+| # | 房间 | 内容 |
+|---|------|------|
+| I | Heartbeat | 记忆星图 + 情绪谱 |
+| II | Keepsakes | 一行一句的纪念 + 照片 |
+| III | Study | 书架 + 陪你读书 |
+| IV | Calendar | 日历 + 财务 + 睡眠 |
+| V | Memory | 记忆审核  |
+| VI | Disc | 过往对话记录 + 歌单 |
+
+---
 ## Dev
 
 ```bash
 npm install
 npm run dev
 # http://localhost:3000
+
 ```
 
-## Build
-
-```bash
-npm run build
-npm run build:kimi-room   # explicit mode flag (default)
-```
-
-## Configure
-
-After first launch, open `/settings` to set:
-
-- LLM endpoint + model + API key (OpenAI-format chat completion)
-- Your name + companion name (used in {{user}} / {{char}} templates)
-- Portrait images (one self, one companion)
-- App title (default "kimi")
-
-All settings + chat history + memories live in browser IndexedDB.
 
 ## Structure
 
@@ -46,15 +97,6 @@ public/images/
 ├── scenes/       drop your own (chat scene backgrounds)
 └── timeline/     drop your own (anniversary imagery)
 ```
-
-## Modules
-
-- **I · Heartbeat** sky (50-slot memory map) + score (30-day pulse staff)
-- **II · Keepsakes** one-line keepsake notes (60-char cap)
-- **III · Study** books + custom categories (per-category 共读 LLM toggle)
-- **IV · Calendar** + finance overlay
-- **V · Memory** review + import md/txt auto-split
-- **VI · Disc** conversation scrap garden (screenshot vision OCR optional)
 
 ## Images
 
