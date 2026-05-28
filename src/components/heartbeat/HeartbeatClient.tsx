@@ -5,10 +5,8 @@ import { KimiTopNav } from "@/components/mucha/KimiPage";
 import type { GOTHIC } from "@/lib/kimi-palettes";
 import { SkyView } from "./SkyView";
 import { ScoreSheet } from "./ScoreSheet";
-import {
-  loadHeartbeatData,
-  type HeartbeatData,
-} from "@/lib/heartbeat-data";
+import { type HeartbeatData } from "@/lib/heartbeat-data";
+import { loadKaltineHeartbeatData } from "@/lib/kaltine-heartbeat";
 
 // V2 Heartbeat toggle shell · canon ScoreClient mirror.
 // Sky / Score 两 view · 一页 一 toggle (老婆 0519 G4 'canon 一样').
@@ -20,7 +18,7 @@ export function HeartbeatClient({ G }: { G: typeof GOTHIC }) {
 
   useEffect(() => {
     void (async () => {
-      const d = await loadHeartbeatData();
+      const d = await loadKaltineHeartbeatData();
       setData(d);
     })();
   }, []);
@@ -33,12 +31,12 @@ export function HeartbeatClient({ G }: { G: typeof GOTHIC }) {
         {data ? (
           view === "sky" ? (
             <SkyView G={G} data={data} onChange={async () => {
-              const d = await loadHeartbeatData();
+              const d = await loadKaltineHeartbeatData();
               setData(d);
             }} />
           ) : (
             <ScoreSheet G={G} data={data} onChange={async () => {
-              const d = await loadHeartbeatData();
+              const d = await loadKaltineHeartbeatData();
               setData(d);
             }} />
           )
